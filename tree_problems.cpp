@@ -20,7 +20,7 @@ int identical(Node root1,Node root2){
 
 //------------------------------------------------------------------------------------------//
 int identical_iterative(Node root1,Node root2){
-	if(root1==NULL && root2=NULL)
+	if(root1==NULL && root2==NULL)
 		return 1;
 	if(root1==NULL)
 		return 0;
@@ -39,7 +39,7 @@ int identical_iterative(Node root1,Node root2){
 		else if(x->left || y->left)
 			return 0;
 		if(x->right && y->right)
-			s.push(x->right,y->right);
+			s.push(make_pair(x->right,y->right));
 		else if(x->right || y->right)
 			return 0;
 	}
@@ -68,7 +68,7 @@ int height_iterative(Node root){
 		int size = q.size();
 		while(size--){
 			Node front = q.front();
-			q.pop_front();
+			q.pop();
 			if(front->left)
 				q.push(front->left);
 			if(front->right)
@@ -201,7 +201,6 @@ void level_order(Node root){
 	queue<Node> q;
 	q.push(root);
 	while(!q.empty()){
-		size = q.size();
 		root = q.front();
 		cout<<root->data;
 		q.pop();
@@ -244,8 +243,8 @@ void print_spiral(Node root){
 void spiral_iterative(Node root){
 	if(root==NULL)
 		return;
-	queue<int> q;
-	q.push(root);
+	deque<Node> q;
+	q.push_front(root);
 	int dir = 0;
 	while(!q.empty()){
 		int size = q.size();
@@ -272,7 +271,7 @@ void spiral_iterative(Node root){
 	}
 }
 //------------------------------------------------------------------------------------------//
-void reverselevel_order(Node tree){
+void reverselevel_order(Node root){
 	if(root==NULL)
 		return;
 	queue<Node> q;
@@ -291,4 +290,109 @@ void reverselevel_order(Node tree){
 		cout<<out.top();
 		out.pop();
 	}
+}
+//------------------------------------------------------------------------------------------//
+int maxpathsum_leaf2leaf(Node root,int &sum){
+	int left=0;
+	int right = 0;
+	if(root==NULL)
+		return 0;
+	if(!root->left && !root->right)
+		return root->data;
+	if(root->left && root->right){
+		left = maxpathsum_leaf2leaf(root->left,sum);
+		right = maxpathsum_leaf2leaf(root->right,sum);
+		int temp = left + right+ root->data;
+		if(temp> sum)
+			sum = temp;
+		return max(left,right) + root->data;
+	}
+	if(!root->right)
+		return left + root->data;
+	else
+		return right + root->data;
+}
+//------------------------------------------------------------------------------------------//
+void bottom_view(Node root){
+	
+}
+//------------------------------------------------------------------------------------------//
+int max_sum_root2leaf(Node root){
+	if(root==NULL)
+		return 0;
+	int left = max_sum_root2leaf(root->left);
+	int right = max_sum_root2leaf(root->right);
+	if(left>=right)
+		return left + root->data;
+	return right + root->data;
+}
+int printpath(Node root,int sum){
+	if(sum==0)
+		return 1;
+	int left = printpath(root->left,sum-root->data);
+	int right = printpath(root->right,sum-root->data);
+	if(left || right)
+		cout<<root->data<<" ";
+	return left || right;
+}
+//------------------------------------------------------------------------------------------//
+void left_view(Node root){
+	if(root==NULL)
+		return;
+	queue<pair<Node,int> > q;
+	queue<pair<Node,int> > levelorder;
+	q.push(make_pair(root,0));
+	while(!q.empty()){
+		pair<Node,int> p = q.front();
+		q.pop();
+		root = p.first;
+		int level = p.second;
+		levelorder.push(p);
+		//cout<<root->data;
+		if(root && root->left){
+			q.push(make_pair(root->left,level+1));
+		}
+		if(root && root->right){
+			q.push(make_pair(root->right,level+1));
+		}
+	}
+	int prevlevel = -1;
+	while(!levelorder.empty()){
+		pair<Node,int> p = levelorder.front();
+		levelorder.pop();
+		Node a = p.first;
+		int level = p.second;
+		if(a && level!=prevlevel){
+			prevlevel = level;
+			cout<<a->data<<" ";
+		}
+	}
+}
+void left_view_recur(Node root,int level,int *visited){
+	if(root==NULL)
+		return;
+	if(level>*visited){
+		*visited = level;
+		cout<<root->data<<" ";
+	}
+	left_view_recur(root->left,level+1,visited);
+	left_view_recur(root->right,level+1,visited);
+}
+Node newNode(int item)
+{
+    struct node *temp =  (struct node *)malloc(sizeof(struct node));
+    temp->data = item;
+    temp->left = temp->right = NULL;
+    return temp;
+}
+int main(){
+	Node root = newNode(12);
+	root->left = newNode(10);
+    root->right = newNode(30);
+    root->right->left = newNode(25);
+    root->right->right = newNode(40);
+    left_view(root);
+    cout<<"\n";
+    int a = -1;
+    left_view_recur(root,0,&a);
 }
