@@ -368,6 +368,7 @@ void left_view(Node root){
 		}
 	}
 }
+//------------------------------------------------------------------------------------------//
 void left_view_recur(Node root,int level,int *visited){
 	if(root==NULL)
 		return;
@@ -378,6 +379,7 @@ void left_view_recur(Node root,int level,int *visited){
 	left_view_recur(root->left,level+1,visited);
 	left_view_recur(root->right,level+1,visited);
 }
+//------------------------------------------------------------------------------------------//
 Node newNode(int item)
 {
     struct node *temp =  (struct node *)malloc(sizeof(struct node));
@@ -403,9 +405,11 @@ void boundary_leaves(Node root){
 	boundary_leaves(root->right);
 
 }
+
 void boundary_right(Node root){
 
 }
+//------------------------------------------------------------------------------------------//
 void diagonal_traversal(Node root,int line_no,map<int,vector<int> > &table){
 	if(!root)
 		return;
@@ -424,6 +428,7 @@ void print_diagonal(Node root){
 		cout<<"\n";
 	}
 }
+//------------------------------------------------------------------------------------------//
 int find(vector<int> &a, int b,int size){
 	for(int i=0;i<size;i++){
 		if(a[i]==b)
@@ -437,6 +442,7 @@ void post(vector<int> &pre,vector<int> &in,int size){
 void printpost(int* pre,int n){
 
 }
+//------------------------------------------------------------------------------------------//
 int kthsmallest(Node root,int k){
 	stack<Node> s;
 	Node temp = root;
@@ -460,6 +466,28 @@ int kthsmallest(Node root,int k){
 	}
 	return temp->data;
 }
+//------------------------------------------------------------------------------------------//
+Node LCA(Node root, int n1, int n2)// lowest common ancestor
+{
+   //Your code here
+   if(!root){
+       return NULL;
+   }
+   if(!root->left && !root->right){
+       return root;
+   }
+    if((n2>root->data && n1<root->data) || (n2<root->data && n1>root->data)){
+        return root;
+    }else if(n2 == root->data || n1==root->data){
+        return root;           
+    }else if(n2>root->data && n1>root->data){
+        return LCA(root->right,n1,n2);
+    }else if(n1<root->data && n2<root->data){
+        return LCA(root->left,n1,n2);
+       }
+}
+//------------------------------------------------------------------------------------------//
+
 int main(){
 	Node root = newNode(12);
 	root->left = newNode(10);
