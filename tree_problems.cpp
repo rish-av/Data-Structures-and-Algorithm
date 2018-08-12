@@ -385,14 +385,91 @@ Node newNode(int item)
     temp->left = temp->right = NULL;
     return temp;
 }
+void boundary_left(Node root){
+	if(root->left){
+		cout<<root->data;
+		boundary_left(root->left);
+	}else if(root->right){
+		cout<<root->right;
+		boundary_left(root->right);
+	}
+}
+void boundary_leaves(Node root){
+	if(root==NULL)
+		return;
+	boundary_leaves(root->left);
+	if(!root->left && !root->right)
+		cout<<root->right;
+	boundary_leaves(root->right);
+
+}
+void boundary_right(Node root){
+
+}
+void diagonal_traversal(Node root,int line_no,map<int,vector<int> > &table){
+	if(!root)
+		return;
+	table[line_no].push_back(root->data);
+	diagonal_traversal(root->left,line_no+1,table);
+	diagonal_traversal(root->right,line_no,table);
+}
+void print_diagonal(Node root){
+	map<int,vector<int> > table;
+	int line_no = 0;
+	diagonal_traversal(root,line_no,table);
+	for(auto i=table.begin();i!=table.end();i++){
+		for(auto j=i->second.begin();j!=i->second.end();j++){
+			cout<<*j<<" ";
+		}
+		cout<<"\n";
+	}
+}
+int find(vector<int> &a, int b,int size){
+	for(int i=0;i<size;i++){
+		if(a[i]==b)
+			return i;
+	}
+	return 0;
+}
+void post(vector<int> &pre,vector<int> &in,int size){
+
+}
+void printpost(int* pre,int n){
+
+}
+int kthsmallest(Node root,int k){
+	stack<Node> s;
+	Node temp = root;
+	while(temp){
+			s.push(temp);
+			temp = temp->left;
+	}
+	while(!s.empty()){
+		temp = s.top();
+		s.pop();
+		if(--k==0){
+			break;
+		}
+		if(temp->right){
+			temp = temp->right;
+			while(temp){
+				s.push(temp);
+				temp = temp->left;
+			}
+		}
+	}
+	return temp->data;
+}
 int main(){
 	Node root = newNode(12);
 	root->left = newNode(10);
     root->right = newNode(30);
     root->right->left = newNode(25);
     root->right->right = newNode(40);
-    left_view(root);
+    //left_view(root);
     cout<<"\n";
-    int a = -1;
-    left_view_recur(root,0,&a);
-}
+    //left_view_recur(root,0,&a);
+    int a = kthsmallest(root,2);
+    cout<<a;
+    //print_diagonal(root);
+    }
