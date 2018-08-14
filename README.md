@@ -1,3 +1,2 @@
 # Competitive
-This contains the problems I attempt on different Online Judges.
-Have just begun with competitive.
+A collection of some classic sport programming questions, being a noob the collection isn't that great but hopefully would build it in the coming time :P
